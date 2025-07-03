@@ -1,136 +1,179 @@
- ChatCraft: Fine-Tuned WhatsApp AI Assistant with TinyLlama + Gradio
-Welcome to ChatCraft — a powerful pipeline to fine-tune lightweight language models on real conversational data (like WhatsApp chats) and deploy them with a sleek Gradio-powered web UI.
 
-Whether you're building a personal AI companion, a customer support agent, or a domain-specific tutor, ChatCraft helps you train your own custom model using open-source tools and run it efficiently on minimal hardware.
 
-🚀 Demo: Web Chat Interface (Gradio)
-With just one command, launch your AI assistant in the browser:
+# 🤖 ChatCraft: Personalized WhatsApp-Style AI Chatbot
 
-<!-- (replace with actual GIF if you have) -->
+Fine-Tuning TinyLlama + LoRA + Gradio Web UI
 
-bash
-Copy
-Edit
+Welcome to **ChatCraft** – an end-to-end pipeline to **fine-tune lightweight open-source language models** on your **WhatsApp-style conversations**, then deploy them as an **AI chatbot with a web UI using Gradio**.
+
+> Think of it as building your own ChatGPT – but trained on your real chat history, running privately, and tuned to sound just like you (or your support team).
+
+---
+
+## 🚀 Live Demo Interface (Gradio Included!)
+
+Use your fine-tuned model in a web browser:
+
+```bash
 python gradio_chat.py
-🌟 Project Highlights
-✅ Fine-tunes TinyLlama-1.1B-Chat
-✅ Trains on your WhatsApp chats or dialog datasets
-✅ Uses LoRA + 4-bit quantization → train on Google Colab / laptop
-✅ Clean Gradio chat UI for instant testing
-✅ Easy to extend to Telegram / WhatsApp bot deployment
-✅ Fully offline and private
+```
 
-📁 Project Structure
-bash
-Copy
-Edit
-.
-├── dialogs.txt              # Chat data (instruction \t response)
-├── alpaca_data.jsonl        # Converted Alpaca-format dataset
-├── train_tinyllama.ipynb    # Fine-tuning notebook (TinyLlama + LoRA)
-├── gradio_chat.py           # Gradio-based web chatbot interface
-├── fine_tuned_model/        # Output directory after training
-├── README.md
-🔧 Installation
-Requirements
-Python 3.8+
+* Clean UI for testing
+* Private, fast, and fully offline
+* Ready to be deployed or shared
 
-CUDA GPU (T4, A100, or Colab) recommended
+---
 
-Install Dependencies
-bash
-Copy
-Edit
+## 🔥 Highlights
+
+✅ Fine-tunes [`TinyLlama-1.1B-Chat`](https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0)
+✅ Efficient LoRA fine-tuning (requires <8GB VRAM)
+✅ Uses real conversational data (WhatsApp, Slack, etc.)
+✅ Includes Gradio-based Web UI
+✅ Perfect for custom support bots, tutors, companions
+✅ Deployable on Hugging Face Spaces, Streamlit, or Colab
+
+---
+
+## 📁 Project Overview
+
+```
+ChatCraft/
+├── dialogs.txt              # Your chat data (instruction \t response)
+├── alpaca_data.jsonl        # Converted format for training
+├── train_tinyllama.ipynb    # Notebook to fine-tune TinyLlama
+├── gradio_chat.py           # Web UI using Gradio
+├── fine_tuned_model/        # Output: trained model and tokenizer
+└── README.md
+```
+
+---
+
+## 🛠️ Setup
+
+Install dependencies:
+
+```bash
 pip install whatstk einops gradio bitsandbytes transformers peft accelerate datasets
-📥 Step 1: Prepare Your Data
-Option A: Predefined Dialogs
-Use dialogs.txt with this structure:
+```
 
-ts
-Copy
-Edit
-Hi there!	Hey! How can I help you today?
-What's your name?	I'm your AI assistant, trained just for you.
-Option B: WhatsApp Export
-python
-Copy
-Edit
+---
+
+## 📥 Step 1: Prepare Your Data
+
+### Option A: Pre-Formatted Dialogs
+
+Use `dialogs.txt` with tab-separated pairs:
+
+```
+How are you?	I’m doing well, thank you!
+What’s your name?	I’m ChatCraft, your assistant.
+```
+
+### Option B: Use WhatsApp Exports
+
+```python
 from whatstk import WhatsAppChat
-chat = WhatsAppChat.from_source("chat.txt")
+chat = WhatsAppChat.from_source("whatsapp.txt")
 df = chat.df[['date', 'name', 'text']]
-Group and convert messages into dialog pairs using time gaps or names.
+```
 
-🔄 Step 2: Convert to Alpaca Format
-Transforms into:
+Then convert into (instruction, response) pairs based on time gaps or sender.
 
-json
-Copy
-Edit
-{"instruction": "Hi!", "input": "", "output": "Hello! How can I assist you?"}
-Save as alpaca_data.jsonl.
+---
 
-🧠 Step 3: Fine-Tune the Model
-Open train_tinyllama.ipynb to:
+## 🔄 Step 2: Format for Fine-Tuning
 
-Load TinyLlama in 4-bit mode
+Convert to [Alpaca-style format](https://github.com/tatsu-lab/stanford_alpaca):
 
-Apply LoRA adapters
+```json
+{"instruction": "What's the weather?", "input": "", "output": "It’s sunny and warm today!"}
+```
 
-Tokenize and train on your chat data
+Save as `alpaca_data.jsonl`.
 
-Save the fine-tuned model
+---
 
-Fine-tunes on Google Colab in under 2 hours!
+## 🧠 Step 3: Fine-Tune the Model
 
-💬 Step 4: Launch Gradio Chat UI
-Run:
+Open `train_tinyllama.ipynb`:
 
-bash
-Copy
-Edit
+* Loads **TinyLlama** in 4-bit
+* Applies **LoRA adapters**
+* Tokenizes & formats the data
+* Fine-tunes for 1–2 epochs
+* Saves your **custom chatbot model**
+
+All this can run smoothly on **Google Colab (T4)**.
+
+---
+
+## 💬 Step 4: Chat via Gradio Web UI
+
+Run the chatbot in-browser:
+
+```bash
 python gradio_chat.py
-This loads your fine-tuned model and serves a browser-based chatbot where anyone can talk to your custom-trained AI.
+```
 
-💼 Real-World Use Cases
-🔍 Use Case	💡 Description
-Personal AI Companion	Trained on your chat history or tone
-Customer Support Chatbot	Trained on company FAQ / WhatsApp tickets
-Mental Health Assistant	Mimics therapist-patient conversations
-Educational Tutor	Learn from solved doubts and tutor chats
-Regional Language Bot	Hinglish / Malayalam-trained assistant
-Memory Bot	Remembers past messages / life events
+You’ll see a clean Gradio interface to interact with your trained model.
 
-🌐 Next Steps
-✅ Add memory to Gradio chat (context-based chat)
+---
 
-🌐 Deploy to Hugging Face Spaces or your server
+## 🧠 Why This Works
 
-🤖 Integrate with Telegram/WhatsApp bot
+This project uses:
 
-🧠 Train on multilingual or multi-user data
+* **LoRA**: Trains just a few million parameters (not the whole model).
+* **4-bit quantization**: Shrinks model size so it runs on laptops or free Colab.
+* **Alpaca-style prompts**: Instruction + response formatting.
 
-📤 HuggingFace Integration (Optional)
-Login and upload your fine-tuned model:
+Together, this gives you:
 
-python
-Copy
-Edit
+* ✅ Fast training
+* ✅ Low cost
+* ✅ Highly personalized AI
+
+---
+
+## 💡 Use Cases
+
+| 🛠️ Scenario            | 👥 Target Users             |
+| ----------------------- | --------------------------- |
+| Personal Companion Bot  | Individuals, students       |
+| Customer Support AI     | Startups, D2C brands        |
+| Therapy-style Assistant | Mental health orgs          |
+| Educational Tutor       | EdTech, self-learners       |
+| Internal Knowledge Bot  | Teams, HR, onboarding       |
+| Multilingual Agent      | Rural support, Govt portals |
+
+---
+
+## 🌐 Optional: Upload to Hugging Face
+
+```python
 from huggingface_hub import login
-login()
-model.push_to_hub("your-model-name")
-👨‍💻 Built With
-TinyLlama – 1.1B instruction-tuned base model
+model.push_to_hub("your-username/ChatCraft-TinyLlama")
+```
 
-LoRA – Efficient fine-tuning method
+---
 
-Gradio – Lightweight UI for demo and testing
+## 👤 Author
 
-HuggingFace Transformers – Core ML framework
+**Varun Haridas**
+Email: [varun.haridas321@gmail.com](mailto:varun.haridas321@gmail.com)
+Built with ❤️ using TinyLlama, Hugging Face, and Gradio
 
-whatstk – WhatsApp .txt parser
+---
 
-👤 Author
-Varun Haridas
-Email: varun.haridas321@gmail.com
-Made with ❤️ for open-source AI
+## 📌 Next Add-Ons
+
+* [ ] Contextual memory chat
+* [ ] Telegram/WhatsApp bot integration
+* [ ] Multi-user dashboard
+* [ ] Long-form summarization / retrieval
+* [ ] Integration with company databases or Notion
+
+---
+
 
